@@ -26,8 +26,8 @@ ModuleSceneKen::ModuleSceneKen(bool start_enabled) : Module(start_enabled)
 	foreground.y = 23;
 	foreground.w = 522;
 	foreground.h = 182;
-	foregroundOffsetY = -2;
-	OffsetAdd = 0.03;
+	foregroundOffsetY = -2.f;
+	OffsetAdd = 0.03f;
 
 
 	// Background / sky
@@ -68,12 +68,15 @@ bool ModuleSceneKen::Start()
 	}
 
 	// TODO 0: trigger background music
-	kenMusicId = App->audio->LoadFx("ken.ogg");
+	/*kenMusicId = App->audio->LoadFx("ken.ogg");
 	if (kenMusicId == 0) {
 		LOG("Couldn't load background audio");
 	}
 	if (App->audio->PlayFx(kenMusicId) == false) {
 		LOG("Couldn't play background audio");
+	}*/
+	if (App->audio->PlayMusic("ken.ogg", 5.0f) == false) {
+		LOG("Couldn't play ken music");
 	}
 	
 	return true;
@@ -117,6 +120,9 @@ update_status ModuleSceneKen::Update()
 
 	// TODO 11: Make that pressing space triggers a switch to honda logic module
 	// using FadeToBlack module
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		App->fade->FadeToBlack((Module*)App->scene_honda, App->scene_ken, 5.0f);
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -118,6 +118,10 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 }
 
 //Blit with pivot
-bool ModuleRender::BlitWithPivot(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed) {
+bool ModuleRender::BlitWithPivotDownCenter(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed) {
 	return Blit(texture, x - section->w/2, y - section->h, section, speed);
+}
+
+bool ModuleRender::BlitWithPivotUpRight(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed) {
+	return Blit(texture, x - section->w, y, section, speed);
 }

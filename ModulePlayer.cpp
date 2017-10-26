@@ -31,13 +31,13 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	backward.speed = 0.1f;
 
 	// TODO 8: setup the walk forward animation from ryu4.png
-	/*9, 136, 53, 85
-	78, 131, 62, 90
-	162, 128, 65, 94
-	259, 128, 62, 94
-	352, 128, 55, 94
-	432, 131, 50, 91*/
-
+	walkForward.frames.push_back({9, 136, 53, 85});
+	walkForward.frames.push_back({78, 131, 62, 90});
+	walkForward.frames.push_back({162, 128, 65, 94});
+	walkForward.frames.push_back({259, 128, 62, 94});
+	walkForward.frames.push_back({352, 128, 55, 94});
+	walkForward.frames.push_back({432, 131, 50, 91});
+	walkForward.speed = 0.1f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -73,17 +73,24 @@ update_status ModulePlayer::Update()
 	// position while cycling the animation(check Animation.h)
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		position.x -= 1;
+		playerState = PLAYER_MOV_BACK;
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		position.x += 1;
+		playerState = PLAYER_MOV_FORW;
+	}
+	else {
+		playerState = PLAYER_IDLE;
 	}
 
-	if (playerState == PLAYER_MOVING)
+	if (playerState == PLAYER_MOV_FORW)
 		//App->renderer->Blit(graphics, position.x, position.y, &(idle.GetCurrentFrame()), 1.0f);
-		App->renderer->BlitWithPivot(graphics, position.x, position.y, &(idle.GetCurrentFrame()), 1.0f);
+		App->renderer->BlitWithPivotDownCenter(graphics, position.x, position.y, &(walkForward.GetCurrentFrame()), 1.0f);
+	else if (playerState == PLAYER_MOV_BACK)
+		App->renderer->BlitWithPivotDownCenter(graphics, position.x, position.y, &(backward.GetCurrentFrame()), 1.0f);
 	else if (playerState == PLAYER_IDLE)
 		//App->renderer->Blit(graphics, position.x, position.y, &(idle.GetCurrentFrame()), 1.0f);
-		App->renderer->BlitWithPivot(graphics, position.x, position.y, &(idle.GetCurrentFrame()), 1.0f);
+		App->renderer->BlitWithPivotDownCenter(graphics, position.x, position.y, &(idle.GetCurrentFrame()), 1.0f);
 
 
 	return UPDATE_CONTINUE;
